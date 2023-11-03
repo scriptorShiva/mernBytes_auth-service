@@ -10,6 +10,7 @@ module.exports = {
     ],
     rules: {
         // Add any project-specific rules or overrides here
+        'prettier/prettier': ['error', { endOfLine: 'auto' }],
         'no-console': 'error',
         'dot-notation': 'error',
         '@typescript-eslint/no-misused-promises': 'off',

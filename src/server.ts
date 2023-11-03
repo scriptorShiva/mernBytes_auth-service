@@ -1,15 +1,21 @@
-import express from 'express';
+import { Config } from './config';
+import logger from './config/logger';
+import app from './app';
 
-const app = express();
-const port = 3000; // Use the specified port or default to 3000
+const startServer = async () => {
+    try {
+        app.listen(Config.PORT, () =>
+            logger.info(`Listening on port ${Config.PORT}`),
+        );
+    } catch (err) {
+        if (err instanceof Error) {
+            logger.error(err.message);
+            setTimeout(() => {
+                // as logger work asynchronously thats why we use setTimeout
+                process.exit(1); // Exit the process with error code
+            }, 1000);
+        }
+    }
+};
 
-// Define a route
-app.get('/', (req, res) => {
-    res.send('Hello, World!');
-});
-
-// Start the server
-app.listen(port, () => {
-    // eslint-disable-next-line no-console
-    console.log(`Server is running on port ${port}`);
-});
+startServer();
