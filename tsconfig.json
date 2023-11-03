@@ -109,5 +109,7 @@
     "skipLibCheck": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true                            
-  }
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts", "src/utils/**/*.ts"], // Include test files and utils
+  "exclude": ["node_modules"]
 }
