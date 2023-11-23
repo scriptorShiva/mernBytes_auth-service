@@ -1,0 +1,33 @@
+# Exclude node_modules from the Docker build context
+node_modules
+
+# Exclude npm debug logs
+npm-debug.log
+
+# Exclude Docker-related files
+.dockerignore
+.docker
+.dockerignore
+.dockerignore.dev
+.dockerignore.staging
+.dockerignore.prod
+
+# Exclude development-specific files and directories
+dev/
+*.dev
+
+# Exclude staging-specific files and directories
+staging/
+*.staging
+
+# Exclude production-specific files and directories
+prod/
+*.prod
+
+# Exclude other unnecessary files and directories
+.git
+.gitignore
+.vscode
+
+#Exclude .evn
+.env
