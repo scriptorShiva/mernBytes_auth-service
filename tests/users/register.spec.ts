@@ -118,6 +118,46 @@ describe('POST /auth/register', () => {
             expect(users[0]).toHaveProperty('role');
             expect(users[0].role).toBe(Roles.CUSTOMER);
         });
+        it('should store hashed password in the database', async () => {
+            // Arrange
+            const userData = {
+                firstName: 'Shiva',
+                lastName: 'Pal',
+                email: 'shivapal108941@gmail.com',
+                password: 'secret',
+            };
+
+            // Act: Call the endpoint using supertest library
+            await request(app).post('/auth/register').send(userData);
+
+            // Assert
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            expect(users[0].password).not.toBe(userData.password);
+            expect(users[0].password).toHaveLength(60);
+            expect(users[0].password).toMatch(/^\$2b\$\d+\$/);
+        });
+        it('should return 400 status if email already exist', async () => {
+            // Arrange
+            const userData = {
+                firstName: 'Shiva',
+                lastName: 'Pal',
+                email: 'shivapal108941@gmail.com',
+                password: 'secret',
+            };
+            const userRepository = connection.getRepository(User);
+            await userRepository.save({ ...userData, role: Roles.CUSTOMER });
+
+            // Act: Call the endpoint using supertest library
+            const res = await request(app)
+                .post('/auth/register')
+                .send(userData);
+            const users = await userRepository.find();
+            // Assert
+            expect(res.statusCode).toBe(400);
+            expect(users).toHaveLength(1);
+            expect;
+        });
     });
     // sad path
     describe('Fields are missing', () => {});
