@@ -35,7 +35,7 @@ describe('POST /auth/register', () => {
                 firstName: 'Shiva',
                 lastName: 'Pal',
                 email: 'shivapal108941@gmail.com',
-                password: 'secret',
+                password: 'secret@1234',
             };
             //Act : call endpoint using supertest library
             const response = await request(app)
@@ -50,7 +50,7 @@ describe('POST /auth/register', () => {
                 firstName: 'Shiva',
                 lastName: 'Pal',
                 email: 'shivapal108941@gmail.com',
-                password: 'secret',
+                password: 'secret@1234',
             };
             //Act : call endpoint using supertest library
             const response = await request(app)
@@ -67,7 +67,7 @@ describe('POST /auth/register', () => {
                 firstName: 'Shiva',
                 lastName: 'Pal',
                 email: 'shivapal108941@gmail.com',
-                password: 'secret',
+                password: 'secret@1234',
             };
             //Act : call endpoint using supertest library
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -89,7 +89,7 @@ describe('POST /auth/register', () => {
                 firstName: 'Shiva',
                 lastName: 'Pal',
                 email: 'shivapal108941@gmail.com',
-                password: 'secret',
+                password: 'secret@1234',
             };
 
             // Act: Call the endpoint using supertest library
@@ -106,7 +106,7 @@ describe('POST /auth/register', () => {
                 firstName: 'Shiva',
                 lastName: 'Pal',
                 email: 'shivapal108941@gmail.com',
-                password: 'secret',
+                password: 'secret@1234',
             };
 
             // Act: Call the endpoint using supertest library
@@ -124,7 +124,7 @@ describe('POST /auth/register', () => {
                 firstName: 'Shiva',
                 lastName: 'Pal',
                 email: 'shivapal108941@gmail.com',
-                password: 'secret',
+                password: 'secret@1234',
             };
 
             // Act: Call the endpoint using supertest library
@@ -143,7 +143,7 @@ describe('POST /auth/register', () => {
                 firstName: 'Shiva',
                 lastName: 'Pal',
                 email: 'shivapal108941@gmail.com',
-                password: 'secret',
+                password: 'secret@1234',
             };
             const userRepository = connection.getRepository(User);
             await userRepository.save({ ...userData, role: Roles.CUSTOMER });
@@ -167,7 +167,7 @@ describe('POST /auth/register', () => {
                 firstName: 'Shiva',
                 lastName: 'Pal',
                 email: '',
-                password: 'secret',
+                password: 'secret@1234',
             };
             // Act: Call the endpoint using supertest library
             const res = await request(app)
@@ -178,6 +178,140 @@ describe('POST /auth/register', () => {
             const userRepository = connection.getRepository(User);
             const users = await userRepository.find();
             expect(users).toHaveLength(0);
+        });
+        it('should return 400 status code if firstName is missing', async () => {
+            // Arrange
+            const userData = {
+                firstName: '',
+                lastName: 'Pal',
+                email: 'shivapal108941@gmail.com',
+                password: 'secret@1234',
+            };
+            // Act
+            const response = await request(app)
+                .post('/auth/register')
+                .send(userData);
+
+            // Assert
+            expect(response.statusCode).toBe(400);
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            expect(users).toHaveLength(0);
+        });
+        it('should return 400 status code if lastName is missing', async () => {
+            // Arrange
+            const userData = {
+                firstName: '',
+                lastName: 'Pal',
+                email: 'shivapal108941@gmail.com',
+                password: 'secret@1234',
+            };
+            // Act
+            const response = await request(app)
+                .post('/auth/register')
+                .send(userData);
+
+            // Assert
+            expect(response.statusCode).toBe(400);
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            expect(users).toHaveLength(0);
+        });
+        it('should return 400 status code if password is missing', async () => {
+            // Arrange
+            const userData = {
+                firstName: 'Shiva',
+                lastName: 'Pal',
+                email: 'shivapal108941@gmail.com',
+                password: '',
+            };
+            // Act
+            const response = await request(app)
+                .post('/auth/register')
+                .send(userData);
+
+            // Assert
+            expect(response.statusCode).toBe(400);
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            expect(users).toHaveLength(0);
+        });
+    });
+    // fields not in proper format
+    describe('Fields are not in proper format', () => {
+        it('should trim the email field', async () => {
+            // Arrange
+            const userData = {
+                firstName: 'Shiva',
+                lastName: 'Pal',
+                email: ' shivapal108941@gmail.com ',
+                password: 'secret@1234',
+            };
+            // Act
+            await request(app).post('/auth/register').send(userData);
+
+            // Assert
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            const user = users[0];
+            expect(user.email).toBe('shivapal108941@gmail.com');
+        });
+        it('should return 400 status code if email is not a valid email', async () => {
+            // Arrange
+            const userData = {
+                firstName: 'Shiva',
+                lastName: 'Pal',
+                email: 'shivapal__gmail>com',
+                password: 'secret@1234',
+            };
+            // Act
+            const response = await request(app)
+                .post('/auth/register')
+                .send(userData);
+
+            // Assert
+            expect(response.statusCode).toBe(400);
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            expect(users).toHaveLength(0);
+        });
+        it('should return 400 status code if password length is less than 8 chars', async () => {
+            // Arrange
+            const userData = {
+                firstName: 'Shiva',
+                lastName: 'Pal',
+                email: 'shivapal108941@gmail.com',
+                password: 'secre',
+            };
+            // Act
+            const response = await request(app)
+                .post('/auth/register')
+                .send(userData);
+
+            // Assert
+            expect(response.statusCode).toBe(400);
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            expect(users).toHaveLength(0);
+        });
+        it('shoud return an array of error messages if email is missing', async () => {
+            // Arrange
+            const userData = {
+                firstName: 'Shiva',
+                lastName: 'Pal',
+                email: '',
+                password: 'secret@1234',
+            };
+            // Act
+            const response = await request(app)
+                .post('/auth/register')
+                .send(userData);
+
+            // Assert
+            expect(response.body).toHaveProperty('errors');
+            expect(
+                (response.body as Record<string, string>).errors.length,
+            ).toBeGreaterThan(0);
         });
     });
 });
