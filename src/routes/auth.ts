@@ -7,6 +7,8 @@ import logger from '../config/logger';
 import registerValidator from '../validators/register-validator';
 import { TokenService } from '../services/TokenService';
 import { RefreshToken } from '../entity/RefreshToken';
+import loginValidator from '../validators/login-validator';
+import { CredentialService } from '../services/CredentialService';
 
 const router = express.Router();
 
@@ -14,7 +16,13 @@ const userRepository = AppDataSource.getRepository(User);
 const userService = new UserService(userRepository);
 const refreshTokenRepository = AppDataSource.getRepository(RefreshToken);
 const tokenService = new TokenService(refreshTokenRepository);
-const authController = new AuthController(userService, logger, tokenService); // this passing of userService is our dependency injection : receive dependencies from constructor function
+const credentialService = new CredentialService();
+const authController = new AuthController(
+    userService,
+    logger,
+    tokenService,
+    credentialService,
+); // this passing of userService is our dependency injection : receive dependencies from constructor function
 
 // router.post('/register', authController.register);
 // used this way when any binding issue occurs
@@ -23,6 +31,13 @@ router.post(
     registerValidator,
     (req: Request, res: Response, next: NextFunction) =>
         authController.register(req, res, next),
+);
+
+router.post(
+    '/login',
+    loginValidator,
+    (req: Request, res: Response, next: NextFunction) =>
+        authController.login(req, res, next),
 );
 
 export default router;

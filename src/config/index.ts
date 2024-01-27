@@ -5,6 +5,11 @@ import path from 'path';
 config({ path: path.join(__dirname, `../../.env.${process.env.NODE_ENV}`) });
 
 // Extract necessary configurations
+
+//log .evn environment type
+// eslint-disable-next-line no-console
+console.log('Current Environment:', process.env.NODE_ENV);
+
 const {
     PORT,
     NODE_ENV,
