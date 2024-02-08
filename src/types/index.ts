@@ -9,3 +9,11 @@ export interface UserData {
 export interface RegisterUserRequest extends Request {
     body: UserData;
 }
+
+// as we add middleware to add auth property using middleware on request we need new type to define all that.
+export interface AuthRequest extends Request {
+    auth: {
+        sub: string;
+        role: number;
+    };
+}

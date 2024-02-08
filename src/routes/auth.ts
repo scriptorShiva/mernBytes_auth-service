@@ -9,6 +9,8 @@ import { TokenService } from '../services/TokenService';
 import { RefreshToken } from '../entity/RefreshToken';
 import loginValidator from '../validators/login-validator';
 import { CredentialService } from '../services/CredentialService';
+import authenticate from '../middlewares/authenticate';
+import { AuthRequest } from '../types';
 
 const router = express.Router();
 
@@ -38,6 +40,14 @@ router.post(
     loginValidator,
     (req: Request, res: Response, next: NextFunction) =>
         authController.login(req, res, next),
+);
+
+// this becomes our protected route as for access this route we must need token for that.
+router.get(
+    '/self',
+    authenticate,
+    (req: Request, res: Response, next: NextFunction) =>
+        authController.self(req as AuthRequest, res, next),
 );
 
 export default router;
