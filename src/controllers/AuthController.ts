@@ -183,7 +183,7 @@ export class AuthController {
         try {
             // token req.auth.id : first get userId from token then get data by id from db.
             const user = await this.userService.findById(Number(req.auth.sub));
-            res.json(user);
+            res.json({ ...user, password: undefined });
         } catch (error) {
             next(error);
             return;
