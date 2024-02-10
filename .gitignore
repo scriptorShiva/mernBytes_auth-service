@@ -133,3 +133,6 @@ dist
 
 #certs folder
 certs/
+
+#public folder
+public/
