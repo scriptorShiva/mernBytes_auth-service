@@ -155,9 +155,11 @@ export class AuthController {
             });
 
             //Persist the refresh token in database
+            // first we generate token with id in database
             const newRefreshToken =
                 await this.tokenService.persistRefreshToken(user);
 
+            // then , embedd that token id into the token RT.
             const refreshToken = this.tokenService.generateRefreshToken({
                 ...payload,
                 id: String(newRefreshToken.id),
@@ -184,6 +186,65 @@ export class AuthController {
             // token req.auth.id : first get userId from token then get data by id from db.
             const user = await this.userService.findById(Number(req.auth.sub));
             res.json({ ...user, password: undefined });
+        } catch (error) {
+            next(error);
+            return;
+        }
+    }
+
+    async refresh(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+            // if we successfully reached here : then our refresh token is verified successfully by middleware.
+            // create a new access token
+            const payload: JwtPayload = {
+                sub: req.auth.sub,
+                role: req.auth.role,
+            };
+            // generate access token
+            const accessToken = this.tokenService.generateAccessToken(payload);
+
+            res.cookie('accessToken', accessToken, {
+                domain: 'localhost',
+                sameSite: 'strict',
+                maxAge: 1000 * 60 * 60, // 1hr
+                // very important
+                httpOnly: true,
+            });
+
+            // get user from database
+            const user = await this.userService.findById(Number(req.auth.sub));
+            if (!user) {
+                const error = createHttpError(
+                    400,
+                    'User with token could not find',
+                );
+                next(error);
+                return;
+            }
+
+            //Persist the refresh token in database : REFRESH TOKEN ROTATION : generate new RT and added into the database.
+            // first we generate token with id in database
+            const newRefreshToken =
+                await this.tokenService.persistRefreshToken(user);
+
+            // delete old refresh token
+            await this.tokenService.deleteRefreshToken(Number(req.auth.id));
+
+            // then , embedd that token id into the token RT.
+            const refreshToken = this.tokenService.generateRefreshToken({
+                ...payload,
+                id: String(newRefreshToken.id),
+            });
+
+            res.cookie('refreshToken', refreshToken, {
+                domain: 'localhost',
+                sameSite: 'strict',
+                maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
+                httpOnly: true,
+            });
+            this.logger.info('User has been logged in ', { id: user.id });
+
+            res.status(200).json({ id: user.id });
         } catch (error) {
             next(error);
             return;
