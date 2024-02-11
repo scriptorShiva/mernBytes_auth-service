@@ -2,7 +2,12 @@ import { config } from 'dotenv';
 import path from 'path';
 
 // Load environment variables from .env file
-config({ path: path.join(__dirname, `../../.env.${process.env.NODE_ENV}`) });
+config({
+    path: path.join(
+        __dirname,
+        `../../.env.${process.env.NODE_ENV || 'development'}`,
+    ),
+});
 
 // Extract necessary configurations
 

@@ -12,7 +12,10 @@
       "prepare": "husky install",
       "test": "jest --watch --runInBand",
       "start": "ts-node src/index.ts",
-      "typeorm": "typeorm-ts-node-commonjs"
+      "typeorm-migration:generate": "typeorm-ts-node-commonjs migration:generate",
+      "typeorm-migration:run": "typeorm-ts-node-commonjs migration:run",
+      "typeorm-migration:create": "typeorm-ts-node-commonjs migration:create"
+
    },
    "lint-staged": {
       "*.{js,jsx,ts,tsx}": [
