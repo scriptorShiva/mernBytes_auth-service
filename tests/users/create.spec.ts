@@ -44,9 +44,9 @@ describe('POST /users', () => {
 
             // Register user
             const userData = {
-                firstName: 'Shiva',
-                lastName: 'Pal',
-                email: 'palshiva004@gmail.com',
+                firstName: 'Test',
+                lastName: 'User',
+                email: 'test@gmail.com',
                 password: 'password',
                 tenantId: tenant.id,
                 role: Roles.MANAGER,
@@ -76,9 +76,9 @@ describe('POST /users', () => {
 
             // Register user
             const userData = {
-                firstName: 'Rakesh',
-                lastName: 'K',
-                email: 'rakesh@mern.space',
+                firstName: 'Test',
+                lastName: 'User',
+                email: 'test@gmail.com',
                 password: 'password',
                 tenantId: tenant.id,
                 role: Roles.MANAGER,
@@ -106,9 +106,9 @@ describe('POST /users', () => {
             });
 
             const userData = {
-                firstName: 'Rakesh',
-                lastName: 'K',
-                email: 'rakesh@mern.space',
+                firstName: 'Test',
+                lastName: 'User',
+                email: 'test@gmail.com',
                 password: 'password',
                 tenantId: tenant.id,
             };

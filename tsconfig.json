@@ -116,5 +116,5 @@
   //   "tests/**/*.ts",
   //   ".eslintrc.cjs"
   // ], // Include test files and utils
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules","**/*.spec.ts","tests"]
 }
