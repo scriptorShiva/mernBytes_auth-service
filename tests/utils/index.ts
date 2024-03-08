@@ -1,4 +1,5 @@
-import { DataSource } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
+import { Tenant } from '../../src/entity/Tenant';
 
 // sample example test for unit testing
 export const calculateDiscount = (price: number, percentage: number) => {
@@ -29,4 +30,12 @@ export const isJwt = (token: string | null): boolean => {
     } catch (error) {
         return false;
     }
+};
+
+export const createTenant = async (repository: Repository<Tenant>) => {
+    const tenant = await repository.save({
+        name: 'Test tenant',
+        address: 'Test address',
+    });
+    return tenant;
 };
