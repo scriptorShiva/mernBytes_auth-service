@@ -1,4 +1,4 @@
-FROM node:18-alphine as builder
+FROM node:18-alpine as builder
 
 WORKDIR /app
 
@@ -11,7 +11,7 @@ COPY . .
 RUN npm run build
 
 
-FROM node:18-alphine as production 
+FROM node:18-alpine as production 
 
 ENV NODE_ENV=production
 
