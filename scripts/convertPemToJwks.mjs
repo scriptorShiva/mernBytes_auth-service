@@ -3,9 +3,13 @@
 import fs from 'fs';
 import rsaPemToJwk from 'rsa-pem-to-jwk';
 
-const privateKey = fs.readFileSync('./certs/private.pem');
+const privateKey = fs.readFileSync('./certs/private.pem', 'utf8');
 
 // use:sig --> jwk used for verify the signature.
 //JWK will contain both the public and private portions of the RSA key.
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-rsaPemToJwk(privateKey, { use: 'sig' }, 'public');
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unused-vars
+const jwk = rsaPemToJwk(privateKey, { use: 'sig' });
+
+// console.log(jwk);
+
+//We are using private key for 2 purposes: 1. Sign jwt tokens 2. Generating jwks which is used for verifying that jwt signature
