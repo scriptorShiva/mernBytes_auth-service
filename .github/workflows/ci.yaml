@@ -41,7 +41,7 @@ jobs:
         needs: build-and-test
         runs-on: ubuntu-latest
         env:
-            IMAGE_NAME: shivapal108941/mernbyte_auth_service #shivapal108941/mernByte_auth_service:build-2 : github repo name should be all lowercase
+            IMAGE_NAME: shivapal108941/mernbyte_auth_service #shivapal108941/mernByte_auth_service:build-2 : dockerHub repo name should be all lowercase
             IMAGE_TAG: build-${{ github.run_number }}
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         steps:
