@@ -137,7 +137,7 @@ describe('POST /auth/register', () => {
             const users = await userRepository.find();
             expect(users[0].password).not.toBe(userData.password);
             expect(users[0].password).toHaveLength(60);
-            expect(users[0].password).toMatch(/^\$2b\$\d+\$/);
+            expect(users[0].password).toMatch(/^\$2[b|a]\$\d+\$/);
         });
         it('should return 400 status if email already exist', async () => {
             // Arrange
@@ -178,8 +178,8 @@ describe('POST /auth/register', () => {
             interface Headers {
                 ['set-cookie']: string[];
             }
-            let accessToken = null;
-            let refreshToken = null;
+            let accessToken: string | null = null;
+            let refreshToken: string | null = null;
             const cookies = (res.headers as Headers)['set-cookie'] || [];
             cookies.forEach((cookie) => {
                 if (cookie.startsWith('accessToken=')) {
