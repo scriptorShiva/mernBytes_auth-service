@@ -2,7 +2,7 @@ import { Brackets, Repository } from 'typeorm';
 import { User } from '../entity/User';
 import { LimitedUserData, UserData, UserQueryParams } from '../types';
 import createHttpError from 'http-errors';
-import bycrpt from 'bcrypt';
+import bycrpt from 'bcryptjs';
 
 export class UserService {
     constructor(private userRepository: Repository<User>) {}

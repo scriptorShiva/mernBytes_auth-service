@@ -74,8 +74,8 @@ describe('POST /auth/login', () => {
                 (loginResponse.headers as Record<string, string>)[
                     'set-cookie'
                 ] || [];
-            let accessToken = null;
-            let refreshToken = null;
+            let accessToken: string | null = null;
+            let refreshToken: string | null = null;
             for (const cookie of cookies) {
                 if (typeof cookie === 'string') {
                     if (cookie.startsWith('accessToken=')) {
