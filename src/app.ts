@@ -5,8 +5,11 @@ import authRouter from './routes/auth';
 import cookieParser from 'cookie-parser';
 import tenantRouter from './routes/tenant';
 import userRouter from './routes/user';
+import cors from 'cors';
+import { Config } from './config';
 
 const app = express();
+app.use(cors({ origin: [Config.ADMIN_CORS!], credentials: true }));
 app.use(express.static('public'));
 app.use(cookieParser());
 
