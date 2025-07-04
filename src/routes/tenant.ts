@@ -8,8 +8,8 @@ import logger from '../config/logger';
 import authenticate from '../middlewares/authenticate';
 import { canAccess } from '../middlewares/canAccess';
 import { Roles } from '../constants';
-import listUsersValidator from '../validators/list-users-validator';
 import tenantValidator from '../validators/tenant-validator';
+import listTenantValidator from '../validators/list-tenant-validator';
 
 const router = express.Router();
 
@@ -40,7 +40,7 @@ router.patch(
 
 router.get(
     '/',
-    listUsersValidator,
+    listTenantValidator,
     (req: CreateTenantRequest, res: Response, next: NextFunction) =>
         tenantController.getAll(req, res, next),
 );

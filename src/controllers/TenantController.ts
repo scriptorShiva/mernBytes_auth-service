@@ -1,7 +1,7 @@
 import { NextFunction, Response } from 'express';
 import { TenantService } from '../services/TenantService';
 import { Logger } from 'winston';
-import { CreateTenantRequest } from '../types';
+import { CreateTenantRequest, TenantQueryParams } from '../types';
 import { matchedData, validationResult } from 'express-validator';
 import createHttpError from 'http-errors';
 
@@ -49,7 +49,7 @@ export class TenantController {
         this.logger.debug('Request for updating a tenant', req.body);
 
         try {
-            const tenant = await this.tenantService.update(Number(tenantId), {
+            await this.tenantService.update(Number(tenantId), {
                 name,
                 address,
             });
@@ -61,7 +61,17 @@ export class TenantController {
     }
 
     async getAll(req: CreateTenantRequest, res: Response, next: NextFunction) {
-        const validatedQuery = matchedData(req, { onlyValidData: true });
+        // const validatedQueryRaw = matchedData(req, { onlyValidData: true });
+        const validatedQueryRaw = matchedData(req, {
+            onlyValidData: true,
+        }) as Partial<TenantQueryParams>;
+
+        // Ensure validatedQuery has the required properties and correct types
+        const validatedQuery: TenantQueryParams = {
+            q: validatedQueryRaw.q ?? '',
+            perPage: Number(validatedQueryRaw.perPage) || 10,
+            currentPage: Number(validatedQueryRaw.currentPage) || 1,
+        };
 
         try {
             const [tenants, count] =
@@ -69,8 +79,8 @@ export class TenantController {
 
             this.logger.info('All tenants have been fetched');
             res.json({
-                currentPage: validatedQuery.currentPage as number,
-                perPage: validatedQuery.perPage as number,
+                currentPage: validatedQuery.currentPage,
+                perPage: validatedQuery.perPage,
                 total: count,
                 data: tenants,
             });
