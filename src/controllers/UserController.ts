@@ -77,6 +77,7 @@ export class UserController {
     }
 
     async getAll(req: Request, res: Response, next: NextFunction) {
+        // only return valid data from request , if user will add fields other that role , page , size then it will be ignored
         const validatedQuery = matchedData(req, { onlyValidData: true });
 
         try {
