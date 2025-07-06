@@ -108,6 +108,7 @@ export class UserService {
         }
 
         if (validatedQuery.role) {
+            // andWhere for both will run role with search q
             queryBuilder.andWhere('user.role = :role', {
                 role: validatedQuery.role,
             });
