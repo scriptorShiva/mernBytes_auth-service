@@ -7,6 +7,7 @@ import tenantRouter from './routes/tenant';
 import userRouter from './routes/user';
 import cors from 'cors';
 import { Config } from './config';
+import { globalErrorHandler } from './middlewares/globalErrorHandler';
 
 const app = express();
 app.use(cors({ origin: [Config.ADMIN_CORS!], credentials: true }));
@@ -28,20 +29,21 @@ app.use('/tenants', tenantRouter);
 app.use('/users', userRouter);
 
 // Global Error Handler - This should be the last middleware in the chain
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
-    logger.error(err.message);
-    const statusCode = err.statusCode || err.status || err.status || 500;
-    res.status(statusCode).json({
-        errors: [
-            {
-                type: err.name,
-                msg: err.message,
-                path: '',
-                location: '',
-            },
-        ],
-    });
-});
+app.use(globalErrorHandler);
+// We have replaced commented handler with globalErrorHandler
+// app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
+//     logger.error(err.message);
+//     const statusCode = err.statusCode || err.status || err.status || 500;
+//     res.status(statusCode).json({
+//         errors: [
+//             {
+//                 type: err.name,
+//                 msg: err.message,
+//                 path: '',
+//                 location: '',
+//             },
+//         ],
+//     });
+// });
 
 export default app;
