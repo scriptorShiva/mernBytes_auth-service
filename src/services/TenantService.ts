@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { Tenant } from '../entity/Tenant';
 import { ITenant, TenantQueryParams } from '../types';
 
@@ -14,9 +14,19 @@ export class TenantService {
     }
 
     async getAll(validatedQuery: TenantQueryParams) {
+        if (!validatedQuery.q) {
+            validatedQuery.q = '';
+        }
+        // add pagination and search on name
         const result = await this.tenantRepository.findAndCount({
+            where: {
+                name: ILike(`%${validatedQuery.q}%`),
+            },
             skip: (validatedQuery.currentPage - 1) * validatedQuery.perPage,
             take: validatedQuery.perPage,
+            order: {
+                createdAt: 'DESC',
+            },
         });
         return result;
     }
